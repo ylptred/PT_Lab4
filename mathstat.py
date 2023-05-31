@@ -34,7 +34,7 @@ def average(lst: list) -> float:
     :param lst: выборка значений
     :type: lst: list
     :return: возвращает выборочное среднее
-    :rtype: flaot
+    :rtype: float
     """
 
     return sum(lst)/len(lst)
@@ -44,8 +44,8 @@ def variance(lst: list) -> float:
     """
     Вычисление выборочной дисперсии
 
-    :param sample: выборка значений
-    :type sample: list
+    :param lst: выборка значений
+    :type lst: list
     :return: возвращает выборочную дисперсию
     :rtype: float
     """
