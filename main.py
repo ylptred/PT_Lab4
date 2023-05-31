@@ -13,8 +13,8 @@ if __name__ == "__main__":
     delta_time_standart = []
     for i in N:
         delta_time_LCG.append(timeit.Timer(lambda: numsgen.LCG(i)).timeit(number=1))
-        delta_time_mid_compositions.append(timeit.Timer(lambda: numsgen.mid_compositions(i)).timeit(number=1))
-        delta_time_standart.append(timeit.Timer(lambda: numsgen.standart_random(i)).timeit(number=1))
+        delta_time_mid_compositions.append(timeit.Timer(lambda: numsgen.XorShiftPlus(i)).timeit(number=1))
+        delta_time_standart.append(timeit.Timer(lambda: numsgen.standard(i)).timeit(number=1))
     d = {'Время генерации LCG': delta_time_LCG,
          'Время генерации методом серединных произведений': delta_time_mid_compositions,
          'Время генерации стандартным способом': delta_time_standart}
@@ -25,5 +25,5 @@ if __name__ == "__main__":
     for i in N:
         sample_lcg = numsgen.LCG(i)
         do_smth(sample_lcg, 0)
-        sample_mid_c = numsgen.mid_compositions(i)
+        sample_mid_c = numsgen.XorShiftPlus(i)
         do_smth(sample_mid_c, 1)
