@@ -1,4 +1,3 @@
-import time
 from random import randint
 
 
@@ -32,5 +31,5 @@ def LCG(size: int) -> list:
 def standard(size: int) -> list:
     result = []
     for i in range(size):
-        result.append(randint(0, 16384))
+        result.append(randint(0, 32768))
     return result

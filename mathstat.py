@@ -1,5 +1,3 @@
-import numsgen
-import timeit
 import numpy as np
 from math import log2, floor
 
@@ -26,107 +24,108 @@ chi_table = {
 }
 
 
-def average(lst: list) -> float:
-
+def aver(arr: list) -> float:
     """
-    Вычисление выборочного среднего
+    Выборочное среднее
 
-    :param lst: выборка значений
-    :type: lst: list
+    :param arr: выборка значений
+    :type: arr: list
     :return: возвращает выборочное среднее
     :rtype: float
     """
 
-    return sum(lst)/len(lst)
+    return sum(arr)/len(arr)
 
 
-def variance(lst: list) -> float:
+def var(arr: list) -> float:
     """
-    Вычисление выборочной дисперсии
+    Выборочная дисперсия
 
-    :param lst: выборка значений
-    :type lst: list
+    :param arr: выборка значений
+    :type arr: list
     :return: возвращает выборочную дисперсию
     :rtype: float
     """
-    m = average(lst)
-    summary = 0
-    for i in lst:
-        summary += (i - m) * (i - m)
 
-    return summary / len(lst)
+    med = aver(arr)
+    summ = 0
+    for i in arr:
+        summ += (i - med) * (i - med)
 
-def chi_2(lst: list) -> tuple:
+    return summ / len(arr)
+
+
+def chi_2(arr: list) -> tuple:
     """
-    Используя критерий хи-квадрат, определяем случайность и равномерность распределения
+    Критерий хи-квадрат
 
-    :param sample: выборка
-    :type sample: list
-    :return: значение статистики, а также строковые описания
+    :param arr: выборка
+    :type arr: list
+    :return: значение статистики
     :rtype: tuple
     """
 
     a = 0
-    theta = 16384
-    N = len(lst)
+    theta = 32768
+    N = len(arr)
     k = 1 + floor(log2(N))
     intervals = np.arange(a, a+theta, (theta-1)/k)
 
-    probability_inetrvals = []
+    probability_intervals = []
     for i in range(len(intervals)-1):
         left = np.ceil(intervals[i])
         right = np.floor(intervals[i + 1])
-        if intervals[i + 1] == right and right != 16383:
+        if intervals[i + 1] == right and right != 32767:
             right -= 1
-        probability_inetrvals.append((right - left + 1) / theta)
+        probability_intervals.append((right - left + 1) / theta)
     intervals[-1] += 1
 
     intervals_count = [0]*k
-    for i in lst:
+    for i in arr:
         for j in range(len(intervals)-1):
             if intervals[j] <= i < intervals[j + 1]:
                 intervals_count[j] += 1
     summary = 0
     for j in range(k):
-        summary += intervals_count[j] ** 2 / (N * probability_inetrvals[j])
+        summary += intervals_count[j] ** 2 / (N * probability_intervals[j])
 
     v = summary - N
     sig_level_line = chi_table[k - 1]
-    if v < sig_level_line[0]:  # Если уровень значимости больше 0.99, то выборка равномерна и не случайна
+    if v < sig_level_line[0]:
         return (f"Принимается: уровень значимости >= {max(significance_level)}", "Отвергается", v)
-    elif v > sig_level_line[2]:  # Если уровень значимости меньше 0.90, то выборка не равномерна и не случайна
+    elif v > sig_level_line[2]:
         return ("Отвергается", "Отвергается", v)
 
     st = ""
     for i in range(
-        len(significance_level) - 1):  # Если уровень значимости между 0.99 и 0.90, то выборка равномерна и случайна
+        len(significance_level) - 1):
         if sig_level_line[i] <= v <= sig_level_line[i + 1]:
             st = f": уровень значимости ({significance_level[i + 1]}, {significance_level[i]}]"
         return ("Принимается " + st, "Принимается " + st, v)
 
 
-def do_smth(lst: list, type: int):
+def params(arr: list, type: str):
 
     """
-    Вычисляет параметры выборки и, использую критерий хи-квадрат, определяется
-                                     случайность и равномерность распределения
+    Параметры выборки
 
-    :param sample: выборка
-    :type sample: list
+    :param type: ГПСЧ
+    :param arr: выборка
+    :type arr: list
     """
 
-    normalized_lst = [i/16353 for i in lst]
-    mean = average(normalized_lst)
-    dispersion = variance(normalized_lst)
+    normalized_lst = [i/32767 for i in arr]
+    mean = aver(normalized_lst)
+    dispersion = var(normalized_lst)
     standart_deviation = dispersion ** (1/2)
     var_coefficient = standart_deviation/mean
-    r1, r2, val = chi_2(lst)
-    if type == 0:
+    r1, r2, val = chi_2(arr)
+    if type == "lcg":
         print("LCG method\n")
-    else:
-        print("Middle compostions method\n")
+    elif type == "xor":
+        print("XorShiftPlus method\n")
     print(
-    f"Размер выборки: {len(lst)}",
+    f"Размер выборки: {len(arr)}",
     f"Среднее: {round(mean, 6)}",
     f"Дисперсия: {round(dispersion, 6)}",
     f"Отклонение: {round(standart_deviation, 6)}",
