@@ -2,6 +2,11 @@ from random import randint
 
 
 def XorShiftPlus(size: int) -> list:
+    """
+    XorShiftPlus method
+    :param size: - selection length
+    :return:
+    """
     result = []
     s0 = 1
     s1 = 2
@@ -15,6 +20,11 @@ def XorShiftPlus(size: int) -> list:
 
 
 def LCG(size: int) -> list:
+    """
+    LCG method
+    :param size: - selection length
+    :return:
+    """
     x0 = 5
     m = 7
     a = 3
@@ -29,6 +39,11 @@ def LCG(size: int) -> list:
 
 
 def standard(size: int) -> list:
+    """
+    standard method of Python
+    :param size: - selection length
+    :return:
+    """
     result = []
     for i in range(size):
         result.append(randint(0, 32768))
