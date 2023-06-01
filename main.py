@@ -9,7 +9,7 @@ pd.set_option('display.width', 400)
 
 
 if __name__ == "__main__":
-    N = [50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000]
+    N = [1000, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000]
     delta_time_LCG = []
     delta_time_xorshiftplus = []
     delta_time_standard = []
