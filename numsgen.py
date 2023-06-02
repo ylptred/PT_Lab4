@@ -26,18 +26,15 @@ def LCG(size: int) -> list:
     :param size: - selection length
     :return:
     """
-    result = []
+    x0 = 5
+    m = 7
+    a = 3
+    c = 3
+    result = [0] * size
+    result[0] = x0
 
-    m = (1 << 40) - 1
-    k = 1 << 40
-    b = int(time.perf_counter_ns() // 100)
-    if b == m:
-        b -= 1
-    r0 = 25
-
-    for i in range(size):
-        r0 = (k * r0 + b) % m
-        result.append(r0 % 32768)
+    for i in range(1, size):
+        result[i] = ((result[i - 1] * a) + c) % m
 
     return result
 
